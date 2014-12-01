@@ -204,3 +204,49 @@ Response is JSON object with requested collection in `items` field. For instance
 ```
 
 All fields are in camelCase, all null values are omitted.
+
+# Custom fields
+
+There are two possibilities to get custom fields from api v2:
+
+* `CustomValues["Custom Field Name"]` - the response will include custom field value only
+* `CustomValues.Get("Custom Field Name")` - the response will include custom field value with some info about the field.
+
+For instance, we have Date custom field named DateCF defined for UserStory:
+
+`http://localhost/TargetProcess/api/v2/UserStory?select={id,dateCF:CustomValues.Get("DateCF"),DateCFRaw:CustomValues["DateCF"]}`
+
+Response:
+```javascript
+{
+  "items": [
+    {
+      "id": 22 // This UserStory has no DateCF custom field defined, so there is no such filed in the returned item
+    },
+    {
+      "id": 11,    // This UserStory has a custom field DateCF, but the field is empty, so the response
+      "dateCF": {  // will include only dateCF item with name, type and entityKind, but without a value
+        "name": "DateCF",
+        "type": "Date",
+        "entityKind": "UserStory"
+      }
+    },
+    {
+      "id": 8,
+      "dateCF": {
+        "name": "DateCF",
+        "type": "Date",
+        "entityKind": "UserStory",
+        "value": "\/Date(1415826000000+0300)\/"   // This userStory has DateCF field with value set
+      },
+      "dateCFRaw": "\/Date(1415826000000+0300)\/"
+    }
+  ]
+}
+```
+API v2 is tolerate for custom fields - if there is no such custom field defined for the entity, API v2 will not fail, just no return the custom field value.
+
+Custom fields are not supported in filters in general. The only supported filter kind is to check whether the cusotm field is set or not:
+
+`&where=CustomValues["DateCF"]!=null`
+`&where=CustomValues["DateCF"]==null`
