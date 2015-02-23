@@ -187,6 +187,42 @@ You can use identifier 'it' to reference the parameter of a filter. For example,
     },
 ```
 
+# Ordering
+
+Ascending and descenidng orders are available, ascending is default option.
+To speicfy the order you should place 'asc' or 'desc' after selector.
+To enable additional sort criteria to sort a sequence you can enumerate them using comma.
+
+For example you can sort user stories descending by effort and then ascending by name:
+
+[select={id,name,effort}&**orderBy=effort desc, name**](https://plan.tpondemand.com/api/v2/userstory?select={id,name,effort}&orderBy=effort desc,name)
+
+
+```JSON
+[
+	{
+		"id": 72903,
+		"name": "Defiant",
+		"effort": 120
+	},
+	{
+		"id": 86582,
+		"name": "Nova",
+		"effort": 50
+	},
+	{
+		"id": 71004,
+		"name": "Rigel",
+		"effort": 20
+	},
+	{
+		"id": 94066,
+		"name": "Springfield",
+		"effort": 20
+	}
+]
+```
+
 # Response format
 
 Response is JSON object with requested collection in `items` field. For instance:
